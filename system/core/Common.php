@@ -82,7 +82,7 @@ if ( ! function_exists('is_really_writable'))
 		if (is_dir($file))
 		{
 			$file = rtrim($file, '/').'/'.md5(mt_rand(1,100).mt_rand(1,100));
-
+			
 			if (($fp = @fopen($file, FOPEN_WRITE_CREATE)) === FALSE)
 			{
 				return FALSE;
@@ -332,9 +332,50 @@ if ( ! function_exists('show_404'))
 		exit;
 	}
 }
-
+if (!function_exists("get_logid")) {
+	function get_logid(){
+		static $LogID = 0;
+		
+		if ($LogID != 0) {
+			return $LogID;
+		}
+		
+		$LogID = intval(microtime(true));
+		
+		return $LogID;
+	};
+}
 // ------------------------------------------------------------------------
-
+if ( !function_exists("get_client_ip"))
+{
+	function get_client_ip($strDefaultIp = '0.0.0.0', $realIp = false)
+	{
+	
+		$strIp = '127.0.0.1';
+		if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			$strIp = strip_tags($_SERVER['HTTP_X_FORWARDED_FOR']);
+			//获取第一个
+			$arrIps = explode(',', $strIp);
+			$num = count($arrIps);
+			if ($num >= 1) {
+				$strIp = $arrIps[$num - 1];
+			}
+		} elseif (isset($_SERVER['HTTP_CLIENTIP'])) {
+			//transmit特有
+			$strIp = strip_tags($_SERVER['HTTP_CLIENTIP']);
+		} elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
+			$strIp = strip_tags($_SERVER['HTTP_CLIENT_IP']);
+		} elseif (isset($_SERVER['REMOTE_ADDR']) && !$realIp) {
+			$strIp = strip_tags($_SERVER['REMOTE_ADDR']);
+		}
+		$strIp = trim($strIp);
+		if (! ip2long($strIp)) {
+			$strIp = $strDefaultIp;
+		}
+	
+		return $strIp;
+	}
+}
 /**
 * Error Logging Interface
 *
@@ -354,9 +395,9 @@ if ( ! function_exists('log_message'))
 		{
 			return;
 		}
-
+		
 		$_log =& load_class('Log');
-		$_log->write_log($level, $message, $php_error);
+		$_log->write_log($level, $message, $php_error,0,1);
 	}
 }
 

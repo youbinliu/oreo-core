@@ -30,7 +30,7 @@ class CI_Log {
 	protected $_threshold	= 1;
 	protected $_date_fmt	= 'Y-m-d H:i:s';
 	protected $_enabled	= TRUE;
-	protected $_levels	= array('ERROR' => '1', 'DEBUG' => '2',  'INFO' => '3', 'ALL' => '4');
+	protected $_levels	= array('ALL'=>0,'DEBUG' => 1, 'INFO' => 2,  'TRACE' => 3,'WARNING'=>4,'ERROR'=>5);
 
 	/**
 	 * Constructor
@@ -58,7 +58,25 @@ class CI_Log {
 	}
 
 	// --------------------------------------------------------------------
-
+	public function debug($msg,$errno = 0,$depth = 0){
+		return $this->write_log("debug",$msg,false,$errno,$depth+1);
+	}
+	
+	public function info($msg,$errno = 0,$depth = 0){
+		return $this->write_log("info",$msg,false,$errno,$depth+1);
+	}
+	
+	public function trace($msg,$errno = 0,$depth = 0){
+		return $this->write_log("trace",$msg,false,$errno,$depth+1);
+	}
+	
+	public function warning($msg,$errno = 0,$depth = 0){
+		return $this->write_log("warning",$msg,false,$errno,$depth+1);
+	}
+	
+	public function error($msg,$errno = 0,$depth = 0){
+		return $this->write_log("error",$msg,false,$errno,$depth+1);
+	}
 	/**
 	 * Write Log File
 	 *
@@ -69,7 +87,7 @@ class CI_Log {
 	 * @param	bool	whether the error is a native PHP error
 	 * @return	bool
 	 */
-	public function write_log($level = 'error', $msg, $php_error = FALSE)
+	public function write_log($level = 'error', $msg, $php_error = FALSE,$errno = 0,$depth = 0)
 	{
 		if ($this->_enabled === FALSE)
 		{
@@ -78,26 +96,37 @@ class CI_Log {
 
 		$level = strtoupper($level);
 
-		if ( ! isset($this->_levels[$level]) OR ($this->_levels[$level] > $this->_threshold))
+		if ( ! isset($this->_levels[$level]) OR ($this->_levels[$level] < $this->_threshold))
 		{
 			return FALSE;
 		}
-
-		$filepath = $this->_log_path.'log-'.date('Y-m-d').'.php';
-		$message  = '';
-
-		if ( ! file_exists($filepath))
+		
+		$filepath = $this->_log_path.'log-'.date('Y-m-d').'.log';
+		if( ($this->_levels[$level] == $this->_levels["ERROR"]) || ($this->_levels[$level] == $this->_levels["WARNING"]) )
 		{
-			$message .= "<"."?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?".">\n\n";
+			$filepath .= '.wf';
 		}
+		
+		$message  = '';
 
 		if ( ! $fp = @fopen($filepath, FOPEN_WRITE_CREATE))
 		{
 			return FALSE;
 		}
-
-		$message .= $level.' '.(($level == 'INFO') ? ' -' : '-').' '.date($this->_date_fmt). ' --> '.$msg."\n";
-
+		
+		$trace = debug_backtrace();
+		if( $depth >= count($trace) )
+		{
+			$depth = count($trace) - 1;
+		}
+		
+		$file = isset($trace[$depth]['file'])?basename($trace[$depth]['file']):'';
+		$line = isset($trace[$depth]['line'])?$trace[$depth]['line']:'';
+		
+		$message = sprintf("[$level] [".date($this->_date_fmt)."] [$file:$line] logid=[%s] ip=[%s]"
+				."uri=[%s] errno=[$errno] errmsg=[%s]\n",
+				get_logid(),get_client_ip(),isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '',$msg);
+		
 		flock($fp, LOCK_EX);
 		fwrite($fp, $message);
 		flock($fp, LOCK_UN);

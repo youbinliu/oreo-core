@@ -49,7 +49,7 @@
  * ------------------------------------------------------
  */
 	require(BASEPATH.'core/Common.php');
-
+	
 /*
  * ------------------------------------------------------
  *  Load the framework constants
@@ -63,7 +63,16 @@
 	{
 		require(APPPATH.'config/constants.php');
 	}
-
+	/*
+	 * Load logger
+	*/
+	$Logger = & load_class('Log');
+	
+	$Logger->debug("debug");
+	$Logger->info("info");
+	$Logger->trace("trace");
+	$Logger->warning("warning");
+	$Logger->error("error");
 /*
  * ------------------------------------------------------
  *  Define a custom error handler so we can log PHP errors
