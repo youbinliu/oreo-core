@@ -68,11 +68,6 @@
 	*/
 	$Logger = & load_class('Log');
 	
-	$Logger->debug("debug");
-	$Logger->info("info");
-	$Logger->trace("trace");
-	$Logger->warning("warning");
-	$Logger->error("error");
 /*
  * ------------------------------------------------------
  *  Define a custom error handler so we can log PHP errors

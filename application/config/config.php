@@ -170,17 +170,17 @@ $config['directory_trigger']	= 'd'; // experimental not currently in use
 | You can enable error logging by setting a threshold over zero. The
 | threshold determines what gets logged. Threshold options are:
 |
-|	-1 = OFF
-|	1 = INFO TRACE WARNING ERROR
-|	2 = TRACE WARNING ERROR
-|	3 = WARNING ERROR
-|	4 = ERROR
-|
+|  -1 = OFF
+|	1 = DEBUG INFO TRACE WARNING ERROR
+|	2 = INFO TRACE WARNING ERROR
+|	3 = TRACE WARNING ERROR
+|	4 = WARNING ERROR
+|   5 = ERROR
 | For a live site you'll usually only enable Errors (1) to be logged otherwise
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 1;
+$config['log_threshold'] = 2;
 
 /*
 |--------------------------------------------------------------------------
