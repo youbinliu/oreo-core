@@ -7,7 +7,7 @@
    <meta name="keywords" content="">
    <meta name="author" content="">
 
-   <title>OreoFramework</title>
+   <title>OreoWebFramework</title>
 
    <link href="<?php echo base_url('assets/css/bootstrap.min.css') ?>" rel="stylesheet">
    <link href="<?php echo base_url('assets/css/font-awesome.min.css') ?>" rel="stylesheet">
@@ -50,7 +50,7 @@ body {
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">OreoFramework</a>
+          <a class="navbar-brand" href="#">OreoWebFramework</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -82,8 +82,8 @@ body {
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
         <h1>Oreo Web Framework</h1>
-        <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-        <p>To see the difference between static and fixed top navbars, just scroll.</p>
+        <p>This is a web Framework , include Codeigniter 2.2, Bootstrap 3.2, Awesome fonts 4.1</p>
+        <p>We can use it to build web quickly.</p>
         <p>
           <a class="btn btn-lg btn-primary" href="#" role="button">Have fun &raquo;</a>
         </p>
